@@ -9,22 +9,24 @@ from turtle import position
 from unittest import skip
 
 class Node:
-
-    def __init__(self, value=None, next=None):
+    def __init__(self, value: int, tf: float, next=None):
         """ Class to define the structure of each node in a linked list (postings list).
             Value: document id, Next: Pointer to the next node
             Add more parameters if needed.
-            Hint: You may want to define skip pointers & appropriate score calculation here"""
+            Hint: You may want to define skip pointers & appropriate score calculation here
+        """
+        # The value is infact the document_id
         self.value = value
+        self.tf = tf
         self.next = next
         self.skip = None
-        self.tfidf = 0.0
 
 
 class LinkedList:
     """ Class to define a linked list (postings list). Each element in the linked list is of the type 'Node'
         Each term in the inverted index has an associated linked list object.
-        Feel free to add additional functions to this class."""
+        Feel free to add additional functions to this class.
+    """
     def __init__(self):
         self.start_node = None
         self.end_node = None
@@ -36,7 +38,7 @@ class LinkedList:
         if self.start_node is None:
             return
 
-        current_node:Node = self.start_node
+        current_node: Node = self.start_node
 
         while (current_node):
             traversal.append(current_node)
@@ -60,14 +62,16 @@ class LinkedList:
         return traversal
 
     def add_skip_connections(self):
+        """ Write logic to add skip pointers to the linked list. 
+            This function does not return anything.
+            To be implemented.
+        """
         traversal = self.traverse_list()
         self.length = len(traversal)
         n_skips = math.floor(math.sqrt(self.length))
         if n_skips * n_skips == self.length:
             n_skips = n_skips - 1
-        """ Write logic to add skip pointers to the linked list. 
-            This function does not return anything.
-            To be implemented."""
+
 
         if n_skips <= 0: return
         self.skip_length = math.floor((self.length) / (n_skips))
@@ -88,10 +92,8 @@ class LinkedList:
             return
             
 
-        
 
-
-    def insert_at_end(self, value):
+    def insert_at_end(self, value: int, tf: float):
         """ Write logic to add new elements to the linked list.
             Insert the element at an appropriate position, such that elements to the left are lower than the inserted
             element, and elements to the right are greater than the inserted element.
@@ -101,10 +103,10 @@ class LinkedList:
         
         #handle condition where empty
         if not traversal:
-            self.start_node = Node(value)
+            self.start_node = Node(value, tf)
             return
 
-        temp_node = Node(value=value)
+        temp_node = Node(value, tf)
         current_node = self.start_node
 
         #handling scenario where value of start node is greater than value to be inserted
