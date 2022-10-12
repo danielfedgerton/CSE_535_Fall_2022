@@ -3,8 +3,10 @@
 Institute: University at Buffalo
 '''
 
-from typing import Dict, List
-from linkedlist import LinkedList
+import numpy as np
+
+from typing import Dict, List, Set
+from linkedlist import LinkedList, Node
 from collections import OrderedDict
 
 
@@ -12,6 +14,7 @@ class Indexer:
     def __init__(self):
         """ Add more attributes if needed"""
         self.inverted_index = OrderedDict({})
+        self.doc_ids:  Set[int] = set()
 
     def get_index(self):
         """ Function to get the index.
@@ -38,8 +41,10 @@ class Indexer:
         # Now that we have our set of unique tokens in a document, we
         # `add_to_index`
         for term in tf_dict:
-            # Assertion fails if a false is returned
-            assert self.add_to_index(term, tf_dict[term])
+            self.add_to_index(term, doc_id, tf_dict[term])
+
+        # And we add the doc_id to the list of doc_ids
+        self.doc_ids.add(doc_id)
 
     def add_to_index(self, term_, doc_id_, tf):
         if term_ not in self.inverted_index:
@@ -79,8 +84,49 @@ class Indexer:
 
         return count / len(tokenized_document)
 
-    def calculate_tf_idf(self):
-        """ Calculate tf-idf score for each document in the postings lists of the index.
-            To be implemented."""
+    @classmethod
+    def binary_search(cls, node_id: int, term_pplist: List[Node]) -> Node:
+        """Searches for a node with the value `node_id`
 
-        raise NotImplementedError
+        Args:
+            node (int): The node you were looking for.
+        """
+        lower_bound: int = 0
+        upper_bound: int = len(term_pplist)
+
+        curr_idx = len(term_pplist) // 2
+
+        while(lower_bound <= upper_bound):
+            if term_pplist[curr_idx].value == node_id:
+                return term_pplist[curr_idx]
+
+            elif term_pplist[curr_idx] > node_id:
+                upper_bound = curr_idx - 1
+            else: lower_bound = curr_idx + 1
+
+        raise ValueError("Something went wrong with your postings list creation, "\
+            "check it out! :)")
+
+    def calculate_tf_idf(self):
+        """Calculate tf-idf score for each document in the postings lists of the index.
+        To be implemented.
+        """
+        corpus_vector = np.zeroes((len(self.doc_ids), len(self.inverted_index)))
+
+        # They want a vector for each doc that has the shape 1 X N (N is the number of
+        # unique terms in the corpus)
+        for doc_idx, doc_id in enumerate(self.doc_ids):
+            for term_idx, term in enumerate(self.inverted_index):
+                term_pplist = self.inverted_index[term].traverse_list()
+
+                # The number fo documents in which the term appears
+                num_of_appear = len()
+                # Computing idf
+                idf = np.log(len(self.doc_ids)) - np.log(1+num_of_appear)
+
+                # Finding in the traversal (wiz sorted) the node for the `doc_id`
+                tf = self.binary_search(doc_id, term_pplist).tf
+
+                corpus_vector[doc_idx, term_idx] = tf * idf
+
+        return

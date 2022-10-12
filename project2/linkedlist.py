@@ -132,6 +132,3 @@ class LinkedList:
             current_node = current_node.next
         
         raise ValueError('element was not inserted')
-
-    def get_idf(self):
-        self.idf = math.log(5000 / (len(self.traverse_list())))
