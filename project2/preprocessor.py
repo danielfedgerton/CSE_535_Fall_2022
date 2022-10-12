@@ -8,10 +8,12 @@ from nltk.stem import PorterStemmer
 import re
 from nltk.corpus import stopwords
 import nltk
+
 nltk.download('stopwords')
 
 
 class Preprocessor:
+
     def __init__(self):
         self.stop_words = set(stopwords.words('english'))
         self.ps = PorterStemmer()
@@ -26,4 +28,11 @@ class Preprocessor:
         """ Implement logic to pre-process & tokenize document text.
             Write the code in such a way that it can be re-used for processing the user's query.
             To be implemented."""
-        raise NotImplementedError
+        text = text.lower()
+        text = re.sub(r'[^a-z0-9]', ' ', text)
+        text = re.sub(r'^ ', '', text)
+        text = re.sub(r' $', '', text)
+        text = re.sub(r' +', ' ', text)
+        text = text.split()
+
+        return text

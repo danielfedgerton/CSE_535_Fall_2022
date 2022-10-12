@@ -3,6 +3,7 @@
 Institute: University at Buffalo
 '''
 
+from typing import Dict, List, Tuple
 from tqdm import tqdm
 from preprocessor import Preprocessor
 from indexer import Indexer
@@ -19,6 +20,7 @@ from flask import Flask
 from flask import request
 import hashlib
 
+
 app = Flask(__name__)
 
 
@@ -27,7 +29,7 @@ class ProjectRunner:
         self.preprocessor = Preprocessor()
         self.indexer = Indexer()
 
-    def _merge(self):
+    def _merge(self, query_terms: List[str]) -> Dict[str, List[int]]:
         """ Implement the merge algorithm to merge 2 postings list at a time.
             Use appropriate parameters & return types.
             While merging 2 postings list, preserve the maximum tf-idf value of a document.
@@ -40,11 +42,12 @@ class ProjectRunner:
             To be implemented."""
         raise NotImplementedError
 
-    def _get_postings(self):
+    def _get_postings(self, term: str) -> LinkedList:
         """ Function to get the postings list of a term from the index.
             Use appropriate parameters & return types.
             To be implemented."""
-        raise NotImplementedError
+        return self.indexer.inverted_index[term]
+ 
 
     def _output_formatter(self, op):
         """ This formats the result in the required format.

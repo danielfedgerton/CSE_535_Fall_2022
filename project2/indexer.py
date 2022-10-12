@@ -24,11 +24,16 @@ class Indexer:
             self.add_to_index(t, doc_id)
 
     def add_to_index(self, term_, doc_id_):
-        """ This function adds each term & document id to the index.
-            If a term is not present in the index, then add the term to the index & initialize a new postings list (linked list).
-            If a term is present, then add the document to the appropriate position in the posstings list of the term.
-            To be implemented."""
-        raise NotImplementedError
+        if term_ not in self.inverted_index:
+            llist = LinkedList()
+            llist.insert_at_end(doc_id_)
+            self.inverted_index[term_] = llist
+            return
+        
+        self.inverted_index[term_].insert_at_end(doc_id_)
+
+        return
+
 
     def sort_terms(self):
         """ Sorting the index by terms.
@@ -41,9 +46,16 @@ class Indexer:
     def add_skip_connections(self):
         """ For each postings list in the index, add skip pointers.
             To be implemented."""
-        raise NotImplementedError
+        for t in self.inverted_index:
+            llist = LinkedList()
+            llist.insert_at_end(self.inverted_index.get(t))
+            llist.add_skip_connections()
+            self.inverted_index[t] = llist
+
 
     def calculate_tf_idf(self):
         """ Calculate tf-idf score for each document in the postings lists of the index.
             To be implemented."""
+
+        
         raise NotImplementedError
