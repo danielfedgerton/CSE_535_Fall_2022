@@ -76,9 +76,9 @@ class ProjectRunner:
 
         current_merged_list = inverted_lists[0]
         for in_list in inverted_lists[1:]:
-            comp_cnts, current_merged_list = self._merge(
+            comp_cnt, current_merged_list = self._merge(
                 current_merged_list, in_list)
-            overall_comparisons += comp_cnts
+            overall_comparisons += comp_cnt
 
         return overall_comparisons, [
             node.value for node in heapq.nlargest(topn, current_merged_list)

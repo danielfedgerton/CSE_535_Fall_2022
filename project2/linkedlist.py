@@ -116,7 +116,7 @@ class LinkedList:
         current_node = self.start_node
 
         #handling scenario where value of start node is greater than value to be inserted
-        if current_node.value > temp_node.value:
+        if current_node.value > value:
             temp_node.next = current_node
             self.start_node = temp_node
             return
@@ -125,16 +125,17 @@ class LinkedList:
             if current_node.value == value: 
                 return
 
-            if (current_node.value < value) and (current_node.next == None):
+            elif (current_node.value < value) and (current_node.next is None):
                 current_node.next = temp_node
                 self.end_node = temp_node
                 return
 
-            if ((current_node.value < value) and (current_node.next.value > value)):
+            elif ((current_node.value < value) and (current_node.next.value > value)):
                 temp_node.next = current_node.next
                 current_node.next = temp_node
                 return
 
             current_node = current_node.next
-        
+
+
         raise ValueError('element was not inserted')
