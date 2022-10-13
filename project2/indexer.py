@@ -14,8 +14,8 @@ class Indexer:
     def __init__(self):
         """ Add more attributes if needed"""
         self.inverted_index = OrderedDict({})
-        self.doc_ids:  Set[int] = set()
-        self.corpus_vector = np.zeroes((len(self.doc_ids), len(self.inverted_index)))
+        self.doc_vecs:  OrderedDict({})
+
 
     def get_index(self):
         """ Function to get the index.
@@ -45,7 +45,7 @@ class Indexer:
             self.add_to_index(term, doc_id, tf_dict[term])
 
         # And we add the doc_id to the list of doc_ids
-        self.doc_ids.add(doc_id)
+        self.doc_vecs[doc_id] = None
 
     def add_to_index(self, term_, doc_id_, tf):
         if term_ not in self.inverted_index:
@@ -68,12 +68,10 @@ class Indexer:
 
     def add_skip_connections(self):
         """ For each postings list in the index, add skip pointers.
-            To be implemented."""
-        for t in self.inverted_index:
-            llist = LinkedList()
-            llist.insert_at_end(self.inverted_index.get(t))
-            llist.add_skip_connections()
-            self.inverted_index[t] = llist
+            To be implemented.
+        """
+        for term in self.inverted_index:
+            self.inverted_index[term].add_skip_connections()
 
     def calculate_tf(self, token: str, tokenized_document: List[str]) -> float:
         """Calculates the normalized (occurances_of_term_in_doc/num_of_terms_in_doc)
@@ -101,7 +99,7 @@ class Indexer:
             if term_pplist[curr_idx].value == node_id:
                 return term_pplist[curr_idx]
 
-            elif term_pplist[curr_idx] > node_id:
+            elif term_pplist[curr_idx].value > node_id:
                 upper_bound = curr_idx - 1
             else: lower_bound = curr_idx + 1
 
@@ -114,18 +112,21 @@ class Indexer:
         """
         # They want a vector for each doc that has the shape 1 X N (N is the number of
         # unique terms in the corpus)
-        for doc_idx, doc_id in enumerate(self.doc_ids):
-            for term_idx, term in enumerate(self.inverted_index):
-                term_pplist = self.inverted_index[term].traverse_list()
+        tfidf_vector = np.zeros((len(self.inverted_index, )))
 
-                # The number fo documents in which the term appears
+        for doc_idx, doc_id in enumerate(self.doc_vecs):
+            for term_idx, term in enumerate(self.inverted_index):
+                term_pplist: List[Node] = self.inverted_index[term].traverse_list()
+
+                # The number of documents in which the term appears
                 num_of_appear = len()
                 # Computing idf
-                idf = np.log(len(self.doc_ids)) - np.log(1+num_of_appear)
+                idf = np.log(len(self.doc_vecs)) - np.log(1+num_of_appear)
 
                 # Finding in the traversal (wiz sorted) the node for the `doc_id`
                 tf = self.binary_search(doc_id, term_pplist).tf
 
-                self.corpus_vector[doc_idx, term_idx] = tf * idf
+                tfidf_vector[term_idx] = tf * idf
+                self.doc_vecs[doc_idx] = tfidf_vector
 
         return
