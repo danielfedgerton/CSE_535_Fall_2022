@@ -57,7 +57,7 @@ class LinkedList:
             if current_node.skip not in traversal:
                 if current_node.skip:
                     traversal.append(current_node.skip)
-            current_node = current_node.next    
+            current_node = current_node.skip    
 
         return traversal
 
