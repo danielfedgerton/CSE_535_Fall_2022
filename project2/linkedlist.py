@@ -21,6 +21,12 @@ class Node:
         self.next = next
         self.skip = None
 
+    def __eq__(self, __o: object) -> bool:
+        return self.tf == __o.tf
+
+    def __gt__(self, __o: object) -> bool:
+        return self.tf > __o.tf
+
 
 class LinkedList:
     """ Class to define a linked list (postings list). Each element in the linked list is of the type 'Node'

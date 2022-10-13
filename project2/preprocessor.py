@@ -3,7 +3,6 @@
 Institute: University at Buffalo
 '''
 
-import collections
 from nltk.stem import PorterStemmer
 import re
 from nltk.corpus import stopwords
@@ -26,8 +25,9 @@ class Preprocessor:
 
     def tokenizer(self, text):
         """ Implement logic to pre-process & tokenize document text.
-            Write the code in such a way that it can be re-used for processing the user's query.
-            To be implemented."""
+        Write the code in such a way that it can be re-used for processing
+        the user's query.
+        """
         text = text.lower()
         text = re.sub(r'[^a-z0-9]', ' ', text)
         text = re.sub(r'^ ', '', text)

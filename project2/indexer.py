@@ -15,6 +15,7 @@ class Indexer:
         """ Add more attributes if needed"""
         self.inverted_index = OrderedDict({})
         self.doc_ids:  Set[int] = set()
+        self.corpus_vector = np.zeroes((len(self.doc_ids), len(self.inverted_index)))
 
     def get_index(self):
         """ Function to get the index.
@@ -111,8 +112,6 @@ class Indexer:
         """Calculate tf-idf score for each document in the postings lists of the index.
         To be implemented.
         """
-        corpus_vector = np.zeroes((len(self.doc_ids), len(self.inverted_index)))
-
         # They want a vector for each doc that has the shape 1 X N (N is the number of
         # unique terms in the corpus)
         for doc_idx, doc_id in enumerate(self.doc_ids):
@@ -127,6 +126,6 @@ class Indexer:
                 # Finding in the traversal (wiz sorted) the node for the `doc_id`
                 tf = self.binary_search(doc_id, term_pplist).tf
 
-                corpus_vector[doc_idx, term_idx] = tf * idf
+                self.corpus_vector[doc_idx, term_idx] = tf * idf
 
         return
