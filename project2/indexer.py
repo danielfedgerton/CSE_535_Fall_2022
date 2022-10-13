@@ -14,7 +14,7 @@ class Indexer:
     def __init__(self):
         """ Add more attributes if needed"""
         self.inverted_index = OrderedDict({})
-        self.doc_vecs:  OrderedDict({})
+        self.doc_vecs =  OrderedDict({})
 
 
     def get_index(self):
@@ -119,7 +119,7 @@ class Indexer:
                 term_pplist: List[Node] = self.inverted_index[term].traverse_list()
 
                 # The number of documents in which the term appears
-                num_of_appear = len()
+                num_of_appear = len(term_pplist)
                 # Computing idf
                 idf = np.log(len(self.doc_vecs)) - np.log(1+num_of_appear)
 

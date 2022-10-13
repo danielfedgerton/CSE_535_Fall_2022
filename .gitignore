@@ -130,3 +130,4 @@ config.json
 # Pyre type checker
 .pyre/
 .vscode/settings.json
+*.txt

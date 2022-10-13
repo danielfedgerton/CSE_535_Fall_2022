@@ -80,7 +80,7 @@ class LinkedList:
 
 
         if n_skips <= 0: return
-        self.skip_length = math.floor((self.length) / (n_skips))
+        self.skip_length = self.length // n_skips
         position = 0
 
         while position < self.length:
