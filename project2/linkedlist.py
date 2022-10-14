@@ -3,10 +3,7 @@
 Institute: University at Buffalo
 '''
 
-from locale import currency
 import math
-from turtle import position
-from unittest import skip
 
 class Node:
     def __init__(self, value: int, tf: float, next=None):
@@ -42,7 +39,7 @@ class LinkedList:
     def traverse_list(self):
         traversal = [] #list of nodes
         if self.start_node is None:
-            return
+            return traversal
 
         current_node: Node = self.start_node
 
@@ -55,14 +52,13 @@ class LinkedList:
     def traverse_skips(self):
         traversal = []
         if self.start_node is None:
-            return
+            return traversal
         
         current_node:Node = self.start_node
 
         while (current_node):
-            if current_node.skip not in traversal:
-                if current_node.skip:
-                    traversal.append(current_node.skip)
+            if (current_node.skip) and (not current_node.skip in traversal):
+                traversal.append(current_node.skip)
             current_node = current_node.skip    
 
         return traversal
@@ -73,29 +69,24 @@ class LinkedList:
             To be implemented.
         """
         traversal = self.traverse_list()
-        self.length = len(traversal)
+
         n_skips = math.floor(math.sqrt(self.length))
         if n_skips * n_skips == self.length:
             n_skips = n_skips - 1
 
-
         if n_skips <= 0: return
-        self.skip_length = self.length // n_skips
+        self.skip_length = round(math.sqrt(self.length))
         position = 0
 
         while position < self.length:
             skip_target = position + self.skip_length
-            while position < skip_target:
-                if skip_target >= self.length:
-                    traversal[position].skip = self.end_node
-                    position += 1
-                    return
+            if skip_target > (len(traversal)-1): break
 
-                traversal[position].skip = traversal[skip_target]
-                position += 1
-                if position == skip_target:
-                    skip_target = skip_target + self.skip_length
-            return
+            traversal[position].skip = traversal[skip_target]
+
+            position = skip_target
+
+        return
             
 
 
@@ -137,5 +128,8 @@ class LinkedList:
 
             current_node = current_node.next
 
+
+        # Increment the length
+        self.length += 1
 
         raise ValueError('element was not inserted')

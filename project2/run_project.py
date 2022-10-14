@@ -108,7 +108,7 @@ class ProjectRunner:
         """ This function reads & indexes the corpus. After creating the inverted index,
             it sorts the index by the terms, add skip pointers, and calculates the tf-idf scores.
             Already implemented, but you can modify the orchestration, as you seem fit."""
-        with open(corpus, 'r') as fp:
+        with open(corpus, 'r', encoding='utf-8') as fp:
             for line in tqdm(fp.readlines()):
                 doc_id, document = self.preprocessor.get_doc_id(line)
                 tokenized_document: List[str] = self.preprocessor.tokenizer(
@@ -117,7 +117,7 @@ class ProjectRunner:
                                                      tokenized_document)
         self.indexer.sort_terms()
         self.indexer.add_skip_connections()
-        self.indexer.calculate_tf_idf()
+        # self.indexer.calculate_tf_idf()
 
     def sanity_checker(self, command):
         """ DO NOT MODIFY THIS. THIS IS USED BY THE GRADER. """
@@ -154,7 +154,6 @@ class ProjectRunner:
                 3. Get the DAAT AND query results & number of comparisons with & without skip pointers.
                 4. Get the DAAT AND query results & number of comparisons with & without skip pointers, 
                     along with sorting by tf-idf scores."""
-            raise NotImplementedError
 
             input_term_arr = []  # Tokenized query. To be implemented.
 
@@ -167,9 +166,12 @@ class ProjectRunner:
                 output_dict['postingsList'][term] = postings
                 output_dict['postingsListSkip'][term] = skip_postings
 
-            and_op_no_skip, and_op_skip, and_op_no_skip_sorted, and_op_skip_sorted = None, None, None, None
-            and_comparisons_no_skip, and_comparisons_skip, \
-                and_comparisons_no_skip_sorted, and_comparisons_skip_sorted = None, None, None, None
+            and_op_no_skip_sorted, and_op_skip_sorted =None, None
+            and_comparisons_no_skip_sorted, and_comparisons_skip_sorted = None, None
+
+            and_comparisons_no_skip, and_op_no_skip = self._daat_and(input_term_arr, enable_skips=False)
+            and_comparisons_skip, and_op_skip = self._daat_and(input_term_arr, enable_skips=True)
+
             """ Implement logic to populate initialize the above variables.
                 The below code formats your result to the required format.
                 To be implemented."""
