@@ -28,11 +28,37 @@ class Preprocessor:
         Write the code in such a way that it can be re-used for processing
         the user's query.
         """
+        #convert document text to all lower cases
         text = text.lower()
-        text = re.sub(r'[^a-z0-9]', ' ', text)
-        text = re.sub(r'^ ', '', text)
-        text = re.sub(r' $', '', text)
-        text = re.sub(r' +', ' ', text)
-        text = text.split()
-
-        return text
+        #print(text)
+        
+        #removing special characters
+        text_without_spcl = ''
+        for character in text:
+             if  character == " ":
+                #checking charcter is space and if yes concat
+                text_without_spcl = text_without_spcl + character
+             else:
+                if(character.isalnum()):
+                    text_without_spcl = text_without_spcl + character
+        #print(text_without_spcl)
+                
+        text_without_ws = text_without_spcl.strip()
+        #print(text_without_ws)
+        
+        text_without_ws=re.sub(' +', ' ', text_without_spcl)
+        
+        tokenized_text=text_without_ws.split()
+        #print(tokenized_text)
+        
+        tokens_without_sw = [word for word in tokenized_text if not word in self.stop_words]
+        
+        #print(tokens_without_sw)
+        
+        tokens_stemmed=[]
+        for tokens in tokens_without_sw:
+           tokens_stemmed.append(self.ps.stem(tokens))
+        
+        #print(tokens_stemmed)
+        
+        return tokens_stemmed

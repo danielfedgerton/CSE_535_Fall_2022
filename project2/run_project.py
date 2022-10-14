@@ -49,7 +49,10 @@ class ProjectRunner:
                 # Adding up the term frequencies and consider it to be the score.
                 merged_pplist.append(
                     Node(t1_pplist[l1_index].value,
-                         t1_pplist[l1_index] + t2_pplist[l2_index]))
+                         t1_pplist[l1_index].tf + t2_pplist[l2_index].tf))
+
+                l1_index += 1
+                l2_index += 1
 
             # Increment indices accordingly
             elif t1_pplist[l1_index].value > t2_pplist[l2_index].value:
@@ -155,16 +158,17 @@ class ProjectRunner:
                 4. Get the DAAT AND query results & number of comparisons with & without skip pointers, 
                     along with sorting by tf-idf scores."""
 
-            input_term_arr = []  # Tokenized query. To be implemented.
+            input_term_arr = self.preprocessor.tokenizer(query)  # Tokenized query. To be implemented.
 
             for term in input_term_arr:
-                postings, skip_postings = None, None
+                postings, skip_postings = self._get_postings(term, enable_skips=False),\
+                    self._get_postings(term, enable_skips=True)
                 """ Implement logic to populate initialize the above variables.
                     The below code formats your result to the required format.
                     To be implemented."""
 
-                output_dict['postingsList'][term] = postings
-                output_dict['postingsListSkip'][term] = skip_postings
+                output_dict['postingsList'][term] = [i.value for i in postings]
+                output_dict['postingsListSkip'][term] = [i.value for i in skip_postings]
 
             and_op_no_skip_sorted, and_op_skip_sorted =None, None
             and_comparisons_no_skip_sorted, and_comparisons_skip_sorted = None, None
